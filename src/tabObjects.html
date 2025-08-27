@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Medical-Chain</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="col-xs-12 col-sm-8 col-sm-push-2">
+          <h1 class="text-center">Medical-Chain</h1>
+          <h2 class="text-center">Objects</h2>
+          <hr/>
+          <br/>
+        </div>
+      </div>
+
+      <div class="row" style="margin-bottom: 20px">
+        <div class="col-xs-12">
+          <button class="btn btn-primary btn-block" id="newObjectBtn">Add Object</button>
+        </div>
+        <div id="newObjectRow" class="col-xs-12" style="margin-top: 20px;">
+          <!-- NEW OBJECT FORM LOADING -->
+        </div>
+      </div>
+
+      <div id="objectsRow" class="row">
+        <!-- OBJECTS LOADING -->
+      </div>
+    </div>
+
+    <div id="objectTemplate" style="display: none;">
+      <div class="col-sm-6 col-md-4 col-lg-3">
+        <div class="panel panel-default panel-object">
+          <div class="panel-heading">
+            <h3 class="panel-title">Object 1</h3>
+          </div>
+          <div class="panel-body">
+            <img alt="140x140" data-src="holder.js/140x140" class="img-rounded img-center" style="width: 100%;" src="https://animalso.com/wp-content/uploads/2017/01/Golden-Retriever_6.jpg" data-holder-rendered="true">
+            <br/><br/>
+            <strong>ID</strong>: <span class="object-id">1</span><br/>
+            <strong>Room ID</strong>: <span class="room-id">101</span><br/>
+            <strong>Name</strong>: <span class="object-name">Heart Monitor</span><br/>
+            <strong>Notes</strong>: <span class="object-notes">...</span><br/><br/>
+
+            <div class="row"></div>
+                <div class="col-xs-6" style="padding-right: 2.5px;">
+                    <button class="btn btn-success btn-cleaned btn-block" type="button" data-id="0" style="width:100%;">Cleaned</button>
+                </div>
+                <div class="col-xs-6" style="padding-left: 2.5px;">
+                    <button class="btn btn-danger btn-used btn-block" type="button" data-id="0" style="width:100%;">Used</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="newObject" style="display: none;">
+      <form id="addObjectForm">
+        <div class="form-group">
+          <label for="objectId">ID</label>
+          <input type="number" class="form-control" id="objectId" name="id" required>
+        </div>
+        <div class="form-group">
+          <label for="objectName">Name</label>
+          <input type="text" class="form-control" id="objectName" name="name" required>
+        </div>
+        <div class="form-group">
+          <label for="objectPicture">Picture Src</label>
+          <input type="url" class="form-control" id="objectPicture" name="picture_src" required>
+        </div>
+        <div class="form-group">
+          <label for="objectRoomId">Room ID</label>
+          <input type="number" class="form-control" id="objectRoomId" name="room_id" required>
+        </div>
+        <div class="form-group">
+          <label for="objectNotes">Notes</label>
+          <textarea class="form-control" id="objectNotes" name="notes" rows="3"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Add Object</button>
+        <button type="button" class="btn btn-default" id="closeForm">Close Form</button>
+      </form>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/web3.min.js"></script>
+    <script src="js/truffle-contract.js"></script>
+    <script src="js/object.js"></script>
+  </body>
+</html>

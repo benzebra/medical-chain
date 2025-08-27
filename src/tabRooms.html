@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Medical-Chain</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="col-xs-12 col-sm-8 col-sm-push-2">
+          <h1 class="text-center">Medical-Chain</h1>
+          <h2 class="text-center">Rooms</h2>
+          <hr/>
+          <br/>
+        </div>
+      </div>
+
+      <div id="roomsRow" class="row">
+        <!-- ROOMS LOADING -->
+      </div>
+    </div>
+
+    <div id="roomTemplate" style="display: none;">
+      <div class="col-sm-6 col-md-4 col-lg-3">
+        <div class="panel panel-default panel-room">
+          <div class="panel-heading">
+            <h3 class="panel-title">Room 1</h3>
+          </div>
+          <div class="panel-body">
+            <img alt="140x140" data-src="holder.js/140x140" class="img-rounded img-center" style="width: 100%;" src="https://animalso.com/wp-content/uploads/2017/01/Golden-Retriever_6.jpg" data-holder-rendered="true">
+            <br/><br/>
+            <strong>ID</strong>: <span class="room-id">101</span><br/>
+            <strong>Floor</strong>: <span class="room-floor">1</span><br/>
+            <strong>Department</strong>: <span class="room-depart">Oncology</span><br/>
+            <strong>POC-id</strong>: <span class="room-poc">ON01</span><br/><br/>
+            <!-- <strong>POC Name</strong>: <span class="room-floor">Dr. Smith</span><br/> -->
+            
+            <div class="row"></div>
+              <div class="col-xs-6" style="padding-right: 2.5px;">
+                <button class="btn btn-success btn-cleaned btn-block" type="button" data-id="0" style="width:100%;">Cleaned</button>
+              </div>
+              <div class="col-xs-6" style="padding-left: 2.5px;">
+                <button class="btn btn-danger btn-used btn-block" type="button" data-id="0" style="width:100%;">Used</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/web3.min.js"></script>
+    <script src="js/truffle-contract.js"></script>
+    <script src="js/room.js"></script>
+  </body>
+</html>

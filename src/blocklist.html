@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Medical-Chain</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="col-xs-12 col-sm-8 col-sm-push-2">
+          <h1 class="text-center">Medical-Chain</h1>
+          <h2 class="text-center">Object Transactions</h2>
+          <hr/>
+          <br/>
+        </div>
+      </div>
+
+      <div id="transactionTableCleaning" class="table-responsive">
+        <h4 class="text-center">Cleaned Objects</h4>
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Object ID</th>
+              <th>User</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- TRANSACTIONS LOADING -->
+          </tbody>
+        </table>
+      </div>
+
+      <div id="transactionTableUsing" class="table-responsive">
+        <h4 class="text-center">Used Objects</h4>
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Object ID</th>
+              <th>User</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- TRANSACTIONS LOADING -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/web3.min.js"></script>
+    <script src="js/truffle-contract.js"></script>
+    <script src="js/transactions.js"></script>
+  </body>
+</html>

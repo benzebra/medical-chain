@@ -1,0 +1,44 @@
+[
+    {
+        "POC-id": "CD01",
+        "name": "Alice",
+        "surname": "Smith",
+        "role": "doctor",
+        "address": ""
+    },
+    {
+        "POC-id": "NE01",
+        "name": "John",
+        "surname": "Doe",
+        "role": "doctor",
+        "address": ""
+    },
+    {
+        "POC-id": "ON01",
+        "name": "Emma",
+        "surname": "Johnson",
+        "role": "doctor",
+        "address": ""
+    },
+    {
+        "POC-id": "PD01",
+        "name": "Liam",
+        "surname": "Williams",
+        "role": "doctor",
+        "address": ""
+    },
+    {
+        "POC-id": "W001",
+        "name": "Maria",
+        "surname": "Garcia",
+        "role": "waitress",
+        "address": ""
+    },
+    {
+        "POC-id": "W002",
+        "name": "Sophie",
+        "surname": "Brown",
+        "role": "waitress",
+        "address": ""
+    }
+]
