@@ -1,0 +1,86 @@
+[
+    {
+        "id": 0,
+        "name": "Hospital Bed",
+        "picture": "https://placehold.co/140x140",
+        "room_id": 101,
+        "notes": ""
+    },
+    {
+        "id": 1,
+        "name": "IV Stand",
+        "picture": "https://placehold.co/140x140",
+        "room_id": 101,
+        "notes": ""
+    },
+    {
+        "id": 2,
+        "name": "Heart Monitor",
+        "picture": "https://placehold.co/140x140",
+        "room_id": 102,
+        "notes": ""
+    },
+    {
+        "id": 3,
+        "name": "Wheelchair",
+        "picture": "https://placehold.co/140x140",
+        "room_id": 103,
+        "notes": ""
+    },
+    {
+        "id": 4,
+        "name": "Bedside Table",
+        "picture": "https://placehold.co/140x140",
+        "room_id": 101,
+        "notes": ""
+    },
+    {
+        "id": 5,
+        "name": "Oxygen Cylinder",
+        "picture": "https://placehold.co/140x140",
+        "room_id": 102,
+        "notes": ""
+    },
+    {
+        "id": 6,
+        "name": "Defibrillator",
+        "picture": "https://placehold.co/140x140",
+        "room_id": 104,
+        "notes": ""
+    },
+    {
+        "id": 7,
+        "name": "Privacy Curtain",
+        "picture": "https://placehold.co/140x140",
+        "room_id": 101,
+        "notes": ""
+    },
+    {
+        "id": 8,
+        "name": "Privacy Curtain",
+        "picture": "https://placehold.co/140x140",
+        "room_id": 101,
+        "notes": ""
+    },
+    {
+        "id": 9,
+        "name": "Medical Cart",
+        "picture": "https://placehold.co/140x140",
+        "room_id": 103,
+        "notes": ""
+    },
+    {
+        "id": 10,
+        "name": "Overbed Table",
+        "picture": "https://placehold.co/140x140",
+        "room_id": 101,
+        "notes": ""
+    },
+    {
+        "id": 11,
+        "name": "Overbed Table",
+        "picture": "https://placehold.co/140x140",
+        "room_id": 101,
+        "notes": ""
+    }
+]

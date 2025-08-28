@@ -22,3 +22,15 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Truffle
+build/
+
+# Environment variables (IMPORTANTE per MongoDB)
+.env
+.env.local
+.env.production
+
+# Backend specifici
+backend/*.log
+backend/uploads/

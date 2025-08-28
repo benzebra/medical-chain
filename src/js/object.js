@@ -1,28 +1,105 @@
-// const fs = require('fs');
-// const path = require('path');
+async function handleObjectCleaned(objectId, userAddress) {
+  try {
+    const result = await App.contracts.Cleaning.deployed().then(function(instance) {
+      return instance.cleanObject(objectId, {from: userAddress});
+    });
+    
+    await ObjectAPI.updateBlockchainStatus(
+      objectId, 
+      'clean', 
+      result.tx, 
+      userAddress
+    );
+        
+    location.reload();
+    
+  } catch (error) {
+    console.error('Errore nell\'aggiornamento:', error);
+    alert('Errore nell\'aggiornamento dell\'oggetto');
+  }
+}
+
+async function handleObjectUsed(objectId, userAddress) {
+  try {
+    const result = await App.contracts.Cleaning.deployed().then(function(instance) {
+      return instance.useObject(objectId, {from: userAddress});
+    });
+    
+    await ObjectAPI.updateBlockchainStatus(
+      objectId, 
+      'used', 
+      result.tx, 
+      userAddress
+    );
+        
+    location.reload();
+    
+  } catch (error) {
+    console.error('Errore nell\'aggiornamento:', error);
+    alert('Errore nell\'aggiornamento dell\'oggetto');
+  }
+}
+
+// new obj
+$(document).ready(function() {
+  $('#addObjectForm').on('submit', async function(e) {
+    e.preventDefault();
+    
+    const formData = {
+      name: $('#objectName').val(),
+      picture: $('#objectPicture').val(),
+      room_id: parseInt($('#objectRoomId').val()),
+      notes: $('#objectNotes').val()
+    };
+    
+    try {
+      const result = await ObjectAPI.createObject(formData);
+      alert('Oggetto creato con successo!');
+      
+      // Reset form e nascondi
+      this.reset();
+      $('#newObjectRow').hide();
+      
+      location.reload();
+      
+    } catch (error) {
+      alert('Errore nella creazione dell\'oggetto: ' + error.message);
+    }
+  });
+});
 
 App = {
   web3Provider: null,
   contracts: {},
   
   init: async function() {
-    // Load objects.
-    $.getJSON('../json/objects.json', function(data) {
-      var objectsRow = $('#objectsRow');
-      var objectTemplate = $('#objectTemplate');
+    ObjectAPI.getAllObjects().then(objects => {
+      objects.forEach(function(object) {
 
-      for (i = 0; i < data.length; i ++) {
-        objectTemplate.find('.panel-title').text(data[i].name);
-        objectTemplate.find('img').attr('src', data[i].picture);
-        objectTemplate.find('.object-id').text(data[i].id);
-        objectTemplate.find('.object-room').text(data[i].room_id);
-        objectTemplate.find('.object-name').text(data[i].name);
-        objectTemplate.find('.object-notes').text(data[i].notes);
-        objectTemplate.find('.btn-cleaned').attr('data-id', data[i].id); // TODO: add cleaning function
-        objectTemplate.find('.btn-used').attr('data-id', data[i].id); // TODO: add used function
+        var objectRow = $('#objectTemplate').clone();
+        objectRow.find('.object-id').text(object.id);
+        objectRow.find('.room-id').text(object.room_id);
+        objectRow.find('.object-name').text(object.name);
+        objectRow.find('.object-notes').text(object.notes);
+        objectRow.find('img').attr('src', object.picture);
+        objectRow.find('.btn-cleaned').attr('data-id', object.id);
+        objectRow.find('.btn-used').attr('data-id', object.id);
+        
+        console.log(object.blockchain_status)
 
-        objectsRow.append(objectTemplate.html());
-      }
+        if (object.blockchain_status === 'clean') {
+          objectRow.find('.btn-cleaned').attr('disabled', true);
+          objectRow.find('.btn-used').attr('disabled', false);
+        } else if (object.blockchain_status === 'used') {
+          objectRow.find('.btn-used').attr('disabled', true);
+          objectRow.find('.btn-cleaned').attr('disabled', false);
+        }
+        
+        objectRow.attr('style', 'display: block');
+        $('#objectsRow').append(objectRow);
+      });
+    }).catch(error => {
+      console.error('Errore nel caricamento oggetti:', error);
     });
 
     $('#newObjectBtn').on('click', function() {
@@ -48,11 +125,9 @@ App = {
         console.error("User denied account access");
       }
       App.web3Provider = web3.currentProvider;
-      console.log("modern dapp browser");
     }
     else if (window.web3) {
       App.web3Provider = window.web3.currentProvider;
-      console.log("legacy dapp browser");
     }
     else {
       App.web3Provider = new Web3.providers.HttpProvider('http://localhost:7545');
@@ -70,7 +145,8 @@ App = {
 
       App.contracts.Cleaning.setProvider(App.web3Provider);
 
-      return App.markCleaned(), App.markUsed();
+      return true;
+      // return App.markCleaned(), App.markUsed();
     });
 
     return App.bindEvents();
@@ -81,203 +157,81 @@ App = {
     $(document).on('click', '.btn-used', App.handleUsing);
   },
 
-  markCleaned: function() {
-    var cleaningInstance;
+  // markCleaned: function() {
+  //   var cleaningInstance;
 
-    App.contracts.Cleaning.deployed().then(function(instance) {
-      cleaningInstance = instance;
+  //   App.contracts.Cleaning.deployed().then(function(instance) {
+  //     cleaningInstance = instance;
 
-      // return cleaningInstance.getObjects.call();
-      return cleaningInstance.getObjectsCleaned.call();
-    }).then(function(cleaned) {
-      console.log(cleaned)
-      for (i = 0; i < cleaned.length; i++) {
+  //     // return cleaningInstance.getObjects.call();
+  //     return cleaningInstance.getObjectsCleaned.call();
+  //   }).then(function(cleaned) {
+  //     console.log(cleaned)
+  //     for (i = 0; i < cleaned.length; i++) {
 
-        if (cleaned[i] == '0x0000000000000000000000000000000000000000'){
-          // $('.panel').eq(i).find('.btn-cleaned').attr('disabled', false);
-          // $('.panel').eq(i).find('.btn-used').attr('disabled', true);
-          console.log('pass obj ' + (i))
-        }else{
-          $('.panel').eq(i).find('.btn-cleaned').attr('disabled', true);
-          $('.panel').eq(i).find('.btn-used').attr('disabled', false);
-          console.log('cleaned obj ' + (i))
-        }
-      }
-    }).catch(function(err) {
-      console.log(err.message);
-    });
-    // }).then(function(objects) {
-    //   console.log(objects)
-    //   for (i = 0; i < objects.length; i++) {
+  //       if (cleaned[i] == '0x0000000000000000000000000000000000000000'){
+  //         console.log('pass obj ' + (i))
+  //       }else{
+  //         $('.panel').eq(i).find('.btn-cleaned').attr('disabled', true);
+  //         $('.panel').eq(i).find('.btn-used').attr('disabled', false);
+  //         console.log('cleaned obj ' + (i))
+  //       }
+  //     }
+  //   }).catch(function(err) {
+  //     console.log(err.message);
+  //   });
+  // },
 
-    //     if (objects[i] == '0x0000000000000000000000000000000000000000'){
-    //       $('.panel').eq(i).find('.btn-cleaned').attr('disabled', false);
-    //       $('.panel').eq(i).find('.btn-used').attr('disabled', true);
-    //       console.log('used obj ' + (i))
-    //     }else{
-    //       $('.panel').eq(i).find('.btn-cleaned').attr('disabled', true);
-    //       $('.panel').eq(i).find('.btn-used').attr('disabled', false);
-    //       console.log('cleaned obj ' + (i))
-    //     }
-    //   }
-    // }).catch(function(err) {
-    //   console.log(err.message);
-    // });
-  },
+  // markUsed: function() {
+  //   var usingInstance;
 
-  markUsed: function() {
-    var usingInstance;
+  //   App.contracts.Cleaning.deployed().then(function(instance) {
+  //     usingInstance = instance;
 
-    App.contracts.Cleaning.deployed().then(function(instance) {
-      usingInstance = instance;
+  //     console.log(usingInstance)
+  //     return usingInstance.getObjectsUsed.call();
+  //   }).then(function(objects) {
+  //     console.log(objects)
+  //     for (i = 0; i < objects.length; i++) {
 
-      // return usingInstance.getObjects.call();
-      console.log(usingInstance)
-      return usingInstance.getObjectsUsed.call();
-    }).then(function(objects) {
-      console.log(objects)
-      for (i = 0; i < objects.length; i++) {
-
-        if (objects[i] == '0x0000000000000000000000000000000000000000'){
-          // $('.panel').eq(i).find('.btn-cleaned').attr('disabled', false);
-          // $('.panel').eq(i).find('.btn-used').attr('disabled', true);
-          console.log('pass obj ' + i);
-        }else{
-          $('.panel').eq(i).find('.btn-cleaned').attr('disabled', false);
-          $('.panel').eq(i).find('.btn-used').attr('disabled', true);
-          console.log('cleaned obj ' + i);
-        }
-      }
-    }).catch(function(err) {
-      console.log(err.message);
-    });
-    // }).then(function(objects) {
-    //   console.log(objects)
-    //   for (i = 0; i < objects.length; i++) {
-
-    //     if (objects[i] == '0x0000000000000000000000000000000000000000'){
-    //       $('.panel').eq(i).find('.btn-cleaned').attr('disabled', false);
-    //       $('.panel').eq(i).find('.btn-used').attr('disabled', true);
-    //       console.log('used obj ' + i);
-    //     }else{
-    //       $('.panel').eq(i).find('.btn-cleaned').attr('disabled', true);
-    //       $('.panel').eq(i).find('.btn-used').attr('disabled', false);
-    //       console.log('cleaned obj ' + i);
-    //     }
-    //   }
-    // }).catch(function(err) {
-    //   console.log(err.message);
-    // });
-  },
+  //       if (objects[i] == '0x0000000000000000000000000000000000000000'){
+  //         console.log('pass obj ' + i);
+  //       }else{
+  //         $('.panel').eq(i).find('.btn-cleaned').attr('disabled', false);
+  //         $('.panel').eq(i).find('.btn-used').attr('disabled', true);
+  //         console.log('cleaned obj ' + i);
+  //       }
+  //     }
+  //   }).catch(function(err) {
+  //     console.log(err.message);
+  //   });
+  // },
 
   handleUsing: function(event) {
     event.preventDefault();
-
     var objectId = parseInt($(event.target).data('id'));
-
-    var usingInstance;
 
     web3.eth.getAccounts(function(error, accounts) {
       if (error) {
         console.log(error);
       }
 
-      var account = accounts[0];
-
-      App.contracts.Cleaning.deployed().then(function(instance) {
-        usingInstance = instance;
-
-        console.log('used: ' + objectId + ' ' + account);
-
-        var val = usingInstance.useObject(objectId, {from: account})
-
-        console.log(val)
-        // Execute adopt as a transaction by sending account
-        return val;
-      }).then(function(result) {
-        return App.markUsed();
-      }).catch(function(err) {
-        console.log(err.message);
-      });
+      handleObjectUsed(objectId, accounts[0]);
     });
   },
 
   handleCleaning: function(event) {
     event.preventDefault();
-
     var objectId = parseInt($(event.target).data('id'));
-
-    var cleaningInstance;
 
     web3.eth.getAccounts(function(error, accounts) {
       if (error) {
         console.log(error);
       }
 
-      var account = accounts[0];
-
-      App.contracts.Cleaning.deployed().then(function(instance) {
-        cleaningInstance = instance;
-
-        console.log('cleaned: ' + objectId + ' ' + account);
-
-        var val = cleaningInstance.cleanObject(objectId, {from: account})
-
-        // Execute adopt as a transaction by sending account
-        return val;
-      }).then(function(result) {
-        return App.markCleaned();
-      }).catch(function(err) {
-        console.log(err.message);
-      });
+      handleObjectCleaned(objectId, accounts[0]);
     });
   },
-
-  addObj: function() {
-    var newObject = $('#newObject').val();
-    console.log(newObject);
-
-    // Node.js: Add new object to objects.json
-    const objectsPath = path.join(__dirname, '../json/objects.json');
-
-    // Read existing objects
-    let data = [];
-    try {
-      data = JSON.parse(fs.readFileSync(objectsPath, 'utf8'));
-    } catch (err) {
-      console.error('Failed to read objects.json:', err);
-    }
-
-    // Generate a new id for the object
-    var newId = data.length > 0 ? data[data.length - 1].id + 1 : 0;
-    var obj = {
-      id: newId,
-      name: newObject,
-      picture: "images/default.png",
-      room_id: "",
-      notes: ""
-    };
-    data.push(obj);
-
-    // Write updated data back to objects.json
-    try {
-      fs.writeFileSync(objectsPath, JSON.stringify(data, null, 2), 'utf8');
-      console.log('Object added:', obj);
-      location.reload();
-    } catch (err) {
-      console.error('Failed to write objects.json:', err);
-      alert('Failed to add object.');
-    }
-
-    App.contracts.Cleaning.deployed().then(function(instance) {
-      return instance.addObject(newObject);
-    }).then(function(result) {
-      console.log('Object added: ' + newObject);
-      App.markUsed();
-    }).catch(function(err) {
-      console.log(err.message);
-    });
-  }
 
 };
 
