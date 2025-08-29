@@ -1,10 +1,9 @@
 // src/js/object-api.js
-// Nuovo file per gestire le chiamate API invece di leggere objects.json
-
-const API_BASE_URL = 'http://localhost:3001/api';
+// const PORT = process.env.PORT || 3002;
+const PORT = 3002; // Use a fixed port or set via environment variable at build time if needed
+const API_BASE_URL = `http://localhost:${PORT}/api`;
 
 class ObjectAPI {
-  // Ottenere tutti gli oggetti (sostituisce la lettura di objects.json)
   static async getAllObjects() {
     try {
       const response = await fetch(`${API_BASE_URL}/objects`);
@@ -37,18 +36,23 @@ class ObjectAPI {
     try {
       const response = await fetch(`${API_BASE_URL}/objects`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
+        headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(objectData)
       });
-      
-      const result = await response.json();
+
       if (!response.ok) {
-        throw new Error(result.message || 'Errore nella creazione');
+        // Try to parse error message if possible
+        let errorMsg = 'Errore nella creazione';
+        try {
+          const errorData = await response.json();
+          errorMsg = errorData.message || errorMsg;
+        } catch (e) {
+          // response is not JSON
+        }
+        throw new Error(errorMsg);
       }
-      
-      return result;
+
+      return await response.json();
     } catch (error) {
       console.error('Errore nella creazione dell\'oggetto:', error);
       throw error;
@@ -69,6 +73,8 @@ class ObjectAPI {
       const result = await response.json();
       if (!response.ok) {
         throw new Error(result.message || 'Errore nell\'aggiornamento');
+      }else{
+        console.log('Oggetto aggiornato con successo:', result);
       }
       
       return result;

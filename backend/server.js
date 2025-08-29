@@ -1,5 +1,3 @@
-// backend/server.js - Backend Medical Chain con MongoDB Atlas
-
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -99,25 +97,41 @@ app.get('/api/objects/:id', async (req, res) => {
 // POST - Creare un nuovo oggetto
 app.post('/api/objects', async (req, res) => {
   try {
-    const { name, picture, room_id, notes } = req.body;
+    const { id, name, picture, room_id, notes } = req.body;
+    console.log(req.body)
     
     // Validazione
-    if (!name || !room_id) {
+    if (!name || room_id === undefined) {
       return res.status(400).json({
         success: false,
         message: 'Nome e Room ID sono obbligatori'
       });
     }
     
-    // Ottieni il prossimo ID disponibile
-    const nextId = await MedicalObject.getNextId();
+    // Se non viene fornito un ID, genera il prossimo disponibile
+    let objectId = id;
+    if (objectId === undefined || objectId === null) {
+      const lastObject = await MedicalObject.findOne().sort({ id: -1 });
+      objectId = lastObject ? lastObject.id + 1 : 0;
+    }
+    
+    // Controlla se l'ID è già in uso
+    const existingObject = await MedicalObject.findOne({ id: objectId });
+    if (existingObject) {
+      return res.status(400).json({
+        success: false,
+        message: `Oggetto con ID ${objectId} già esistente`
+      });
+    }
     
     const newObject = new MedicalObject({
-      id: nextId,
-      name,
+      id: parseInt(objectId),
+      name: name.trim(),
       picture: picture || 'https://placehold.co/140x140',
       room_id: parseInt(room_id),
-      notes: notes || ''
+      notes: notes || '',
+      status: 'active',
+      blockchain_status: 'unknown'
     });
 
     const savedObject = await newObject.save();
@@ -130,10 +144,13 @@ app.post('/api/objects', async (req, res) => {
         name: savedObject.name,
         picture: savedObject.picture,
         room_id: savedObject.room_id,
-        notes: savedObject.notes
+        notes: savedObject.notes,
+        blockchain_status: savedObject.blockchain_status
       }
     });
+    
   } catch (error) {
+    console.error('Errore POST /api/objects:', error);
     res.status(400).json({
       success: false,
       message: 'Errore nella creazione dell\'oggetto',

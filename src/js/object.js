@@ -40,34 +40,6 @@ async function handleObjectUsed(objectId, userAddress) {
   }
 }
 
-// new obj
-$(document).ready(function() {
-  $('#addObjectForm').on('submit', async function(e) {
-    e.preventDefault();
-    
-    const formData = {
-      name: $('#objectName').val(),
-      picture: $('#objectPicture').val(),
-      room_id: parseInt($('#objectRoomId').val()),
-      notes: $('#objectNotes').val()
-    };
-    
-    try {
-      const result = await ObjectAPI.createObject(formData);
-      alert('Oggetto creato con successo!');
-      
-      // Reset form e nascondi
-      this.reset();
-      $('#newObjectRow').hide();
-      
-      location.reload();
-      
-    } catch (error) {
-      alert('Errore nella creazione dell\'oggetto: ' + error.message);
-    }
-  });
-});
-
 App = {
   web3Provider: null,
   contracts: {},
@@ -79,9 +51,11 @@ App = {
         var objectRow = $('#objectTemplate').clone();
         objectRow.find('.object-id').text(object.id);
         objectRow.find('.room-id').text(object.room_id);
-        objectRow.find('.object-name').text(object.name);
+        objectRow.find('.panel-title').text(object.name);
         objectRow.find('.object-notes').text(object.notes);
+
         objectRow.find('img').attr('src', object.picture);
+
         objectRow.find('.btn-cleaned').attr('data-id', object.id);
         objectRow.find('.btn-used').attr('data-id', object.id);
         
@@ -105,11 +79,31 @@ App = {
     $('#newObjectBtn').on('click', function() {
       $('#newObjectRow').html($('#newObject').html());
       $('#newObjectBtn').attr('disabled', true);
-    });
 
-    $('#newObjectForm').on('submit', function(event) {
-      event.preventDefault();
-      App.addObj();
+      $('#addObjectForm').on('submit', async function(e) {
+        console.log('sub')
+        e.preventDefault();
+        
+        const formData = {
+          id: $('#objectId').val(),
+          name: $('#objectName').val(),
+          picture: $('#objectPicture').val(),
+          room_id: parseInt($('#objectRoomId').val()),
+          notes: $('#objectNotes').val()
+        };
+        
+        try {
+          const result = await ObjectAPI.createObject(formData);
+          alert('Oggetto creato con successo!');
+          
+          this.reset();
+          $('#newObjectRow').hide();
+          
+          location.reload();
+        } catch (error) {
+          alert('Errore nella creazione dell\'oggetto: ' + error.message);
+        }
+      });
     });
 
     return await App.initWeb3();
@@ -146,7 +140,6 @@ App = {
       App.contracts.Cleaning.setProvider(App.web3Provider);
 
       return true;
-      // return App.markCleaned(), App.markUsed();
     });
 
     return App.bindEvents();
@@ -156,56 +149,6 @@ App = {
     $(document).on('click', '.btn-cleaned', App.handleCleaning);
     $(document).on('click', '.btn-used', App.handleUsing);
   },
-
-  // markCleaned: function() {
-  //   var cleaningInstance;
-
-  //   App.contracts.Cleaning.deployed().then(function(instance) {
-  //     cleaningInstance = instance;
-
-  //     // return cleaningInstance.getObjects.call();
-  //     return cleaningInstance.getObjectsCleaned.call();
-  //   }).then(function(cleaned) {
-  //     console.log(cleaned)
-  //     for (i = 0; i < cleaned.length; i++) {
-
-  //       if (cleaned[i] == '0x0000000000000000000000000000000000000000'){
-  //         console.log('pass obj ' + (i))
-  //       }else{
-  //         $('.panel').eq(i).find('.btn-cleaned').attr('disabled', true);
-  //         $('.panel').eq(i).find('.btn-used').attr('disabled', false);
-  //         console.log('cleaned obj ' + (i))
-  //       }
-  //     }
-  //   }).catch(function(err) {
-  //     console.log(err.message);
-  //   });
-  // },
-
-  // markUsed: function() {
-  //   var usingInstance;
-
-  //   App.contracts.Cleaning.deployed().then(function(instance) {
-  //     usingInstance = instance;
-
-  //     console.log(usingInstance)
-  //     return usingInstance.getObjectsUsed.call();
-  //   }).then(function(objects) {
-  //     console.log(objects)
-  //     for (i = 0; i < objects.length; i++) {
-
-  //       if (objects[i] == '0x0000000000000000000000000000000000000000'){
-  //         console.log('pass obj ' + i);
-  //       }else{
-  //         $('.panel').eq(i).find('.btn-cleaned').attr('disabled', false);
-  //         $('.panel').eq(i).find('.btn-used').attr('disabled', true);
-  //         console.log('cleaned obj ' + i);
-  //       }
-  //     }
-  //   }).catch(function(err) {
-  //     console.log(err.message);
-  //   });
-  // },
 
   handleUsing: function(event) {
     event.preventDefault();

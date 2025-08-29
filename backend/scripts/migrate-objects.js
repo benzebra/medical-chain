@@ -1,6 +1,3 @@
-// backend/scripts/migrate-objects.js
-// Script per migrare i dati da objects.json a MongoDB
-
 const mongoose = require('mongoose');
 const fs = require('fs');
 const path = require('path');
