@@ -1,6 +1,53 @@
+// const { init } = require("../../backend/models/MedicalObjects");
+
+function formatTimestamp(timestamp) {
+    const date = new Date(timestamp);
+    return date.toLocaleString();
+}
+
 App = {
     web3Provider: null,
     contracts: {},
+
+    init: async function() {
+        ObjectAPI.getAllObjects().then(objects => {
+            objects = objects.slice(-10);
+            objects.forEach(function(object) {
+                if (object.blockchain_status === 'clean') {
+                    var $tbody = $('#transactionTableCleaning tbody');
+                    if ($tbody.length === 0) {
+                        $tbody = $('<tbody>');
+                        $('#transactionTableCleaning').append($tbody);
+                    }
+                    var row = '<tr>';
+                    row += '<td>' + object.id + '</td>';
+                    row += '<td>' + object.name + '</td>';
+                    row += '<td>' + object.last_user + '</td>';
+                    row += '<td>' + formatTimestamp(object.timestamp) + '</td>';
+                    row += '</tr>';
+                    $tbody.append(row);
+                }else if (object.blockchain_status === 'used') {
+                    var $tbody = $('#transactionTableUsing tbody');
+                    if ($tbody.length === 0) {
+                        $tbody = $('<tbody>');
+                        $('#transactionTableUsing').append($tbody);
+                    }
+                    var row = '<tr>';
+                    row += '<td>' + object.id + '</td>';
+                    row += '<td>' + object.name + '</td>';
+                    row += '<td>' + object.last_user + '</td>';
+                    row += '<td>' + formatTimestamp(object.timestamp) + '</td>';
+                    row += '</tr>';
+                    $tbody.append(row); 
+                }
+            });
+        }).catch(error => {
+        console.error('Errore nel caricamento oggetti:', error);
+        });
+
+        await App.initWeb3();
+        await App.initContract();
+    },
 
     initWeb3: async function() {
 
@@ -63,8 +110,8 @@ App = {
                 var valCleaned = usingInstance.getObjectsCleaned({from: account});
                 var valUsed = usingInstance.getObjectsUsed({from: account});
 
-                App.parseTableCleaning(valCleaned);
-                App.parseTableUsing(valUsed);
+                // App.parseTableCleaning(valCleaned);
+                // App.parseTableUsing(valUsed);
 
                 return true
             }).catch(function(err) {
@@ -73,55 +120,55 @@ App = {
         });
     },
 
-    parseTableCleaning: function(val) {
-        val.then(function(objects) {
-            console.log(objects)
-            var $tbody = $('#transactionTableCleaning tbody');
-            if ($tbody.length === 0) {
-                $tbody = $('<tbody>');
-                $('#transactionTableCleaned').append($tbody);
-            }
-            $tbody.empty();
-            for (var i = 0; i < objects.length; i++) {
-                if(objects[i] != '0x0000000000000000000000000000000000000000'){
-                    var row = '<tr>';
-                    row += '<td>' + i + '</td>';
-                    row += '<td>' + objects[i] + '</td>';
-                    row += '</tr>';
-                    $tbody.append(row);
-                }
-            }
-        }).catch(function(err) {
-            console.log(err.message);
-        });
-    },
+    // parseTableCleaning: function(val) {
+    //     val.then(function(objects) {
+    //         console.log(objects)
+    //         var $tbody = $('#transactionTableCleaning tbody');
+    //         if ($tbody.length === 0) {
+    //             $tbody = $('<tbody>');
+    //             $('#transactionTableCleaned').append($tbody);
+    //         }
+    //         $tbody.empty();
+    //         for (var i = 0; i < objects.length; i++) {
+    //             if(objects[i] != '0x0000000000000000000000000000000000000000'){
+    //                 var row = '<tr>';
+    //                 row += '<td>' + i + '</td>';
+    //                 row += '<td>' + objects[i] + '</td>';
+    //                 row += '</tr>';
+    //                 $tbody.append(row);
+    //             }
+    //         }
+    //     }).catch(function(err) {
+    //         console.log(err.message);
+    //     });
+    // },
 
-    parseTableUsing: function(val) {
-        val.then(function(objects) {
-            var $tbody = $('#transactionTableUsing tbody');
-            if ($tbody.length === 0) {
-                $tbody = $('<tbody>');
-                $('#transactionTableUsed').append($tbody);
-            }
-            $tbody.empty();
-            for (var i = 0; i < objects.length; i++) {
-                if(objects[i] != '0x0000000000000000000000000000000000000000'){
-                    var row = '<tr>';
-                    row += '<td>' + i + '</td>';
-                    row += '<td>' + objects[i] + '</td>';
-                    row += '</tr>';
-                    $tbody.append(row);
-                }
-            }
-        }).catch(function(err) {
-            console.log(err.message);
-        });
-    }
+    // parseTableUsing: function(val) {
+    //     val.then(function(objects) {
+    //         var $tbody = $('#transactionTableUsing tbody');
+    //         if ($tbody.length === 0) {
+    //             $tbody = $('<tbody>');
+    //             $('#transactionTableUsed').append($tbody);
+    //         }
+    //         $tbody.empty();
+    //         for (var i = 0; i < objects.length; i++) {
+    //             if(objects[i] != '0x0000000000000000000000000000000000000000'){
+    //                 var row = '<tr>';
+    //                 row += '<td>' + i + '</td>';
+    //                 row += '<td>' + objects[i] + '</td>';
+    //                 row += '</tr>';
+    //                 $tbody.append(row);
+    //             }
+    //         }
+    //     }).catch(function(err) {
+    //         console.log(err.message);
+    //     });
+    // }
 
 };
 
 $(function() {
   $(window).load(function() {
-    App.initWeb3();
+    App.init();
   });
 });

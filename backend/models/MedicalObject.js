@@ -2,7 +2,6 @@
 const mongoose = require('mongoose');
 
 const MedicalObjectSchema = new mongoose.Schema({
-  // Mantieni la stessa struttura del tuo objects.json
   id: {
     type: Number,
     required: [true, 'ID è obbligatorio'],
@@ -31,7 +30,6 @@ const MedicalObjectSchema = new mongoose.Schema({
     maxlength: [500, 'Note non possono superare 500 caratteri']
   },
   
-  // Campi aggiuntivi per integrazione blockchain
   blockchain_status: {
     type: String,
     enum: ['clean', 'used', 'unknown'],
@@ -46,7 +44,6 @@ const MedicalObjectSchema = new mongoose.Schema({
     default: ''
   },
   
-  // Metadati
   status: {
     type: String,
     enum: ['active', 'inactive', 'maintenance'],
@@ -57,13 +54,11 @@ const MedicalObjectSchema = new mongoose.Schema({
   collection: 'medical_objects'
 });
 
-// Indici per performance
 MedicalObjectSchema.index({ room_id: 1 });
 MedicalObjectSchema.index({ status: 1 });
 MedicalObjectSchema.index({ blockchain_status: 1 });
 MedicalObjectSchema.index({ id: 1, room_id: 1 });
 
-// Metodi statici
 MedicalObjectSchema.statics.findByRoomId = function(roomId) {
   return this.find({ room_id: roomId, status: 'active' }).sort({ id: 1 });
 };
@@ -77,7 +72,6 @@ MedicalObjectSchema.statics.findActive = function() {
 //   return lastObject ? lastObject.id + 1 : 0;
 // };
 
-// Metodi dell'istanza
 MedicalObjectSchema.methods.updateBlockchainStatus = function(status, txHash, userAddress) {
   this.blockchain_status = status;
   this.last_transaction = txHash || '';

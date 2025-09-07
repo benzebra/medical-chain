@@ -51,7 +51,7 @@ App = {
         var objectRow = $('#objectTemplate').clone();
         objectRow.find('.object-id').text(object.id);
         objectRow.find('.room-id').text(object.room_id);
-        objectRow.find('.panel-title').text(object.name);
+        objectRow.find('.card-title').text(object.name);
         objectRow.find('.object-notes').text(object.notes);
 
         objectRow.find('img').attr('src', object.picture);
@@ -77,8 +77,9 @@ App = {
     });
 
     $('#newObjectBtn').on('click', function() {
+      $('#newObjectFormButtonRow').attr('style', 'display: none;');
+      $('#newObject').attr('style', '');
       $('#newObjectRow').html($('#newObject').html());
-      $('#newObjectBtn').attr('disabled', true);
 
       $('#addObjectForm').on('submit', async function(e) {
         console.log('sub')
@@ -89,7 +90,8 @@ App = {
           name: $('#objectName').val(),
           picture: $('#objectPicture').val(),
           room_id: parseInt($('#objectRoomId').val()),
-          notes: $('#objectNotes').val()
+          notes: $('#objectNotes').val(),
+          blockchain_status: $('#objectBlockchainStatus').val()
         };
         
         try {
@@ -103,6 +105,11 @@ App = {
         } catch (error) {
           alert('Errore nella creazione dell\'oggetto: ' + error.message);
         }
+      });
+
+      $('#closeForm').on('click', function() {
+        $('#newObject').attr('style', 'display: none;');
+        $('#newObjectFormButtonRow').attr('style', 'z-index: 1050;');
       });
     });
 

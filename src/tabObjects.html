@@ -4,91 +4,123 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <title>Medical-Chain</title>
-    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
   </head>
   <body>
-    <div class="container">
-      <div class="row">
-        <div class="col-xs-12 col-sm-8 col-sm-push-2">
-          <h1 class="text-center">Medical-Chain</h1>
-          <h2 class="text-center">Objects</h2>
-          <hr/>
-          <br/>
+    <div class="container mb-5">
+      <nav class="navbar navbar-expand-lg bg-white sticky-top">
+        <div class="container">
+          <a class="navbar-brand text-dark fs-3 fw-bold" href="index.html">Home</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-2">
+              <li class="nav-item">
+                <a class="nav-link text-secondary fs-3 disabled mx-3" href="#" tabindex="-1" aria-disabled="true">Objects</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link text-dark fs-3 mx-3" href="blocklist.html">Last Transactions</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+
+      <div class="position-fixed bottom-0 end-0 p-4" id="newObjectFormButtonRow" style="z-index: 1050;">
+        <button class="btn btn-primary rounded-circle shadow-lg d-flex align-items-center justify-content-center fs-1" id="newObjectBtn" style="width: 64px; height: 64px; border-radius: 50%;">
+          +<i class="bi bi-plus"></i>
+        </button>
+      </div>
+
+      <div class="d-flex justify-content-center">
+        <div id="newObjectsRow" class="col-10">
+          <div id="newObject" style="display: none;">
+        <form id="addObjectForm">
+          <div class="row bg-body-secondary border border-light-subtle rounded">
+            <div class="col-12 mb-3 fs-3">
+          New Object Form
+            </div>
+            <div class="col-md-4 col-12 mb-1">
+          <label for="objectId" class="form-label">ID</label>
+          <input type="number" class="form-control" id="objectId" name="id" required>
+            </div>
+            <div class="col-md-4 col-12 mb-3">
+          <label for="objectName" class="form-label">Name</label>
+          <input type="text" class="form-control" id="objectName" name="name" required>
+            </div>
+            <div class="col-md-4 col-12 mb-3">
+          <label for="objectPicture" class="form-label">Picture Src</label>
+          <input type="url" class="form-control" id="objectPicture" name="picture_src" value="https://holder.js/140x140" required>
+            </div>
+            <div class="col-md-4 col-12 mb-3">
+          <label for="objectRoomId" class="form-label">Room ID</label>
+          <input type="number" class="form-control" id="objectRoomId" name="room_id" required>
+            </div>
+            <div class="col-md-4 col-12 mb-3">
+          <label for="objectNotes" class="form-label">Notes</label>
+          <textarea class="form-control" id="objectNotes" name="notes" rows="1"></textarea>
+            </div>
+            <div class="col-md-4 col-12 mb-3">
+          <label for="objectBlockchainStatus" class="form-label">Blockchain Status</label>
+          <select class="form-control" id="objectBlockchainStatus" name="blockchain_status">
+            <option value="clean">Clean</option>
+            <option value="used">Used</option>
+          </select>
+            </div>
+          </div>
+          <div class="row mb-12">
+            <div class="col-md-12 col-12 my-1">
+          <button type="submit" class="btn btn-primary w-100 fs-4">Add Object</button>
+            </div>
+            <div class="col-md-12 col-12 my-1 justify-content-center">
+          <button type="button" class="btn active w-100 mb-3" id="closeForm">Close Form</button>
+            </div>
+          </div>
+        </form>
+          </div>
         </div>
       </div>
 
-      <div class="row" style="margin-bottom: 20px">
-        <div class="col-xs-12">
-          <button class="btn btn-primary btn-block" id="newObjectBtn">Add Object</button>
-        </div>
-        <div id="newObjectRow" class="col-xs-12" style="margin-top: 20px;">
-          <!-- NEW OBJECT FORM LOADING -->
-        </div>
-      </div>
-
-      <div id="objectsRow" class="row">
+      <div id="objectsRow" class="row row-cols-md-4 g-4">
         <!-- OBJECTS LOADING -->
       </div>
     </div>
 
     <div id="objectTemplate" style="display: none;">
-      <div class="col-sm-6 col-md-4 col-lg-3">
-        <div class="panel panel-default panel-object">
-          <div class="panel-heading">
-            <h3 class="panel-title">Object 1</h3>
-          </div>
-          <div class="panel-body">
-            <img alt="140x140" data-src="holder.js/140x140" class="img-rounded img-center" style="width: 100%;" src="https://animalso.com/wp-content/uploads/2017/01/Golden-Retriever_6.jpg" data-holder-rendered="true">
-            <br/><br/>
-            <strong>ID</strong>: <span class="object-id">1</span><br/>
-            <strong>Room ID</strong>: <span class="room-id">101</span><br/>
-            <!-- <strong>Name</strong>: <span class="object-name">Heart Monitor</span><br/> -->
-            <strong>Notes</strong>: <span class="object-notes">...</span><br/><br/>
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title">Object</h5>
+        </div>
+        <div class="card-body">
+          <img alt="140x140" data-src="holder.js/140x140" class="card-img-top" src="">
+          <br/><br/>
+          <strong> ID </strong>: <span class="object-id">1</span><br/>
+          <strong> Room ID </strong>: <span class="room-id">101</span><br/>
+          <strong> Notes </strong>: <span class="object-notes">...</span><br/><br/>
 
-            <div class="row"></div>
-                <div class="col-xs-6" style="padding-right: 2.5px;">
-                    <button class="btn btn-success btn-cleaned btn-block" type="button" data-id="0" style="width:100%;">Cleaned</button>
-                </div>
-                <div class="col-xs-6" style="padding-left: 2.5px;">
-                    <button class="btn btn-danger btn-used btn-block" type="button" data-id="0" style="width:100%;">Used</button>
-                </div>
+          <div class="row">
+            <div class="col-6">
+              <button class="btn btn-success btn-cleaned w-100" type="button" data-id="0">Cleaned</button>
             </div>
+            <div class="col-6">
+              <button class="btn btn-danger btn-used w-100" type="button" data-id="0">Used</button>
+            </div>
+          </div>
         </div>
     </div>
 
-    <div id="newObject" style="display: none;">
-      <form id="addObjectForm">
-        <div class="form-group">
-          <label for="objectId">ID</label>
-          <input type="number" class="form-control" id="objectId" name="id" required>
-        </div>
-        <div class="form-group">
-          <label for="objectName">Name</label>
-          <input type="text" class="form-control" id="objectName" name="name" required>
-        </div>
-        <div class="form-group">
-          <label for="objectPicture">Picture Src</label>
-          <input type="url" class="form-control" id="objectPicture" name="picture_src" required>
-        </div>
-        <div class="form-group">
-          <label for="objectRoomId">Room ID</label>
-          <input type="number" class="form-control" id="objectRoomId" name="room_id" required>
-        </div>
-        <div class="form-group">
-          <label for="objectNotes">Notes</label>
-          <textarea class="form-control" id="objectNotes" name="notes" rows="3"></textarea>
-        </div>
-        <button type="submit" class="btn btn-primary">Add Object</button>
-        <button type="button" class="btn btn-default" id="closeForm">Close Form</button>
-      </form>
-    </div>
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/web3.min.js"></script>
-    <script src="js/truffle-contract.js"></script>
-    <script src="js/object-api.js"></script>
-    <script src="js/object.js"></script>
   </body>
+
+  <script src="js/web3.min.js"></script>
+  <script src="js/truffle-contract.js"></script>
+  <script src="js/object-api.js"></script>
+  <script src="js/object.js"></script>
+
 </html>
