@@ -16,12 +16,12 @@ mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 })
-.then(() => console.log(' - Connesso a MongoDB'))
-.catch(err => console.log(' - Errore connessione MongoDB:', err));
+.then(() => console.log('- Connesso a MongoDB'))
+.catch(err => console.log('Errore connessione MongoDB:', err));
 
 // ROUTES
 
-// GET - Ottenere tutti gli oggetti
+// GET - Obtain OBJs
 app.get('/api/objects', async (req, res) => {
   try {
     const { room_id, status } = req.query;
@@ -49,76 +49,36 @@ app.get('/api/objects', async (req, res) => {
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: 'Errore nel recuperare gli oggetti',
+      message: 'error retrieving objects',
       error: error.message
     });
   }
 });
 
-// // GET - Ottenere un oggetto specifico per ID
-// app.get('/api/objects/:id', async (req, res) => {
-//   try {
-//     const object = await MedicalObject.findOne({ 
-//       id: parseInt(req.params.id),
-//       status: 'active'
-//     });
-    
-//     if (!object) {
-//       return res.status(404).json({
-//         success: false,
-//         message: 'Oggetto non trovato'
-//       });
-//     }
-    
-//     res.json({
-//       success: true,
-//       data: {
-//         id: object.id,
-//         name: object.name,
-//         picture: object.picture,
-//         room_id: object.room_id,
-//         notes: object.notes,
-//         blockchain_status: object.blockchain_status,
-//         last_transaction: object.last_transaction,
-//         last_user: object.last_user
-//       }
-//     });
-//   } catch (error) {
-//     res.status(500).json({
-//       success: false,
-//       message: 'Errore nel recuperare l\'oggetto',
-//       error: error.message
-//     });
-//   }
-// });
-
-// POST - Creare oggetto
+// POST - Create OBJ
 app.post('/api/objects', async (req, res) => {
   try {
     const { id, name, picture, room_id, notes } = req.body;
     console.log(req.body)
     
-    // Validazione
     if (!name || room_id === undefined) {
       return res.status(400).json({
         success: false,
-        message: 'Nome e Room ID sono obbligatori'
+        message: 'name and room_id are required'
       });
     }
     
-    // Se non viene fornito un ID, genera il prossimo disponibile
     let objectId = id;
     if (objectId === undefined || objectId === null) {
       const lastObject = await MedicalObject.findOne().sort({ id: -1 });
       objectId = lastObject ? lastObject.id + 1 : 0;
     }
     
-    // Controlla se l'ID è già in uso
     const existingObject = await MedicalObject.findOne({ id: objectId });
     if (existingObject) {
       return res.status(400).json({
         success: false,
-        message: `Oggetto con ID ${objectId} già esistente`
+        message: `Object with ID ${objectId} already exists`
       });
     }
     
@@ -136,7 +96,7 @@ app.post('/api/objects', async (req, res) => {
     
     res.status(201).json({
       success: true,
-      message: 'Oggetto creato con successo',
+      message: 'obj created',
       data: {
         id: savedObject.id,
         name: savedObject.name,
@@ -148,87 +108,14 @@ app.post('/api/objects', async (req, res) => {
     });
     
   } catch (error) {
-    console.error('Errore POST /api/objects:', error);
+    console.error('error on POST /api/objects:', error);
     res.status(400).json({
       success: false,
-      message: 'Errore nella creazione dell\'oggetto',
+      message: 'obj creation error',
       error: error.message
     });
   }
 });
-
-// PUT - Aggiornare un oggetto esistente
-// app.put('/api/objects/:id', async (req, res) => {
-//   try {
-//     const { name, picture, room_id, notes } = req.body;
-    
-//     const updatedObject = await MedicalObject.findOneAndUpdate(
-//       { id: parseInt(req.params.id), status: 'active' },
-//       { 
-//         name,
-//         picture,
-//         room_id: parseInt(room_id),
-//         notes
-//       },
-//       { new: true, runValidators: true }
-//     );
-
-//     if (!updatedObject) {
-//       return res.status(404).json({
-//         success: false,
-//         message: 'Oggetto non trovato'
-//       });
-//     }
-
-//     res.json({
-//       success: true,
-//       message: 'Oggetto aggiornato con successo',
-//       data: {
-//         id: updatedObject.id,
-//         name: updatedObject.name,
-//         picture: updatedObject.picture,
-//         room_id: updatedObject.room_id,
-//         notes: updatedObject.notes
-//       }
-//     });
-//   } catch (error) {
-//     res.status(400).json({
-//       success: false,
-//       message: 'Errore nell\'aggiornamento dell\'oggetto',
-//       error: error.message
-//     });
-//   }
-// });
-
-// DELETE - Eliminare un oggetto (soft delete)
-// app.delete('/api/objects/:id', async (req, res) => {
-//   try {
-//     const deletedObject = await MedicalObject.findOneAndUpdate(
-//       { id: parseInt(req.params.id), status: 'active' },
-//       { status: 'inactive' },
-//       { new: true }
-//     );
-    
-//     if (!deletedObject) {
-//       return res.status(404).json({
-//         success: false,
-//         message: 'Oggetto non trovato'
-//       });
-//     }
-
-//     res.json({
-//       success: true,
-//       message: 'Oggetto eliminato con successo',
-//       data: { id: deletedObject.id }
-//     });
-//   } catch (error) {
-//     res.status(500).json({
-//       success: false,
-//       message: 'Errore nell\'eliminazione dell\'oggetto',
-//       error: error.message
-//     });
-//   }
-// });
 
 // PUT - Aggiornare stato blockchain di un oggetto
 app.put('/api/objects/:id/blockchain-status', async (req, res) => {
@@ -238,7 +125,7 @@ app.put('/api/objects/:id/blockchain-status', async (req, res) => {
     if (!['clean', 'used', 'unknown'].includes(status)) {
       return res.status(400).json({
         success: false,
-        message: 'Status deve essere: clean, used, o unknown'
+        message: 'invalid status'
       });
     }
     
@@ -250,7 +137,7 @@ app.put('/api/objects/:id/blockchain-status', async (req, res) => {
     if (!object) {
       return res.status(404).json({
         success: false,
-        message: 'Oggetto non trovato'
+        message: 'obj not found'
       });
     }
     
@@ -258,7 +145,7 @@ app.put('/api/objects/:id/blockchain-status', async (req, res) => {
     
     res.json({
       success: true,
-      message: 'Status blockchain aggiornato',
+      message: 'blockchain status updated',
       data: {
         id: object.id,
         blockchain_status: object.blockchain_status,
@@ -269,7 +156,7 @@ app.put('/api/objects/:id/blockchain-status', async (req, res) => {
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: 'Errore nell\'aggiornamento dello status',
+      message: 'blockchain status update failed',
       error: error.message
     });
   }
@@ -299,60 +186,16 @@ app.put('/api/objects/:id/blockchain-status', async (req, res) => {
 //   }
 // });
 
-// // GET - Esportare tutti i dati (backup compatibile con objects.json)
-// app.get('/api/export', async (req, res) => {
-//   try {
-//     const objects = await MedicalObject.findActive();
-    
-//     const exportData = objects.map(obj => ({
-//       id: obj.id,
-//       name: obj.name,
-//       picture: obj.picture,
-//       room_id: obj.room_id,
-//       notes: obj.notes
-//     }));
-    
-//     res.setHeader('Content-Type', 'application/json');
-//     res.setHeader('Content-Disposition', 'attachment; filename="objects-backup.json"');
-//     res.json(exportData);
-//   } catch (error) {
-//     res.status(500).json({
-//       success: false,
-//       message: 'Errore nell\'esportazione dei dati',
-//       error: error.message
-//     });
-//   }
-// });
-
-// GET - Health check e info API
-// app.get('/', (req, res) => {
-//   res.json({
-//     message: ' Medical-Chain Backend API',
-//     version: '1.0.0',
-//     status: 'active',
-//     endpoints: {
-//       'GET /api/objects': 'Ottieni tutti gli oggetti medici',
-//       'GET /api/objects/:id': 'Ottieni oggetto specifico',
-//       'POST /api/objects': 'Crea nuovo oggetto',
-//       'PUT /api/objects/:id': 'Aggiorna oggetto',
-//       'DELETE /api/objects/:id': 'Elimina oggetto',
-//       'PUT /api/objects/:id/blockchain-status': 'Aggiorna status blockchain',
-//       'GET /api/rooms/:room_id/objects': 'Oggetti per stanza',
-//       'GET /api/export': 'Esporta tutti i dati'
-//     }
-//   });
-// });
-
-// Error handling middleware
+// Error handling 
 app.use((error, req, res, next) => {
   console.error('Errore server:', error);
   res.status(500).json({
     success: false,
-    message: 'Errore interno del server',
+    message: 'Internal server error',
     error: process.env.NODE_ENV === 'development' ? error.message : 'Internal server error'
   });
 });
 
 app.listen(PORT, () => {
-  console.log('- Medical-Chain Backend avviato su porta ' + PORT);
+  console.log('- backend started on port ' + PORT);
 });

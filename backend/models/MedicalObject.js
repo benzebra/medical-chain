@@ -67,11 +67,6 @@ MedicalObjectSchema.statics.findActive = function() {
   return this.find({ status: 'active' }).sort({ id: 1 });
 };
 
-// MedicalObjectSchema.statics.getNextId = async function() {
-//   const lastObject = await this.findOne().sort({ id: -1 });
-//   return lastObject ? lastObject.id + 1 : 0;
-// };
-
 MedicalObjectSchema.methods.updateBlockchainStatus = function(status, txHash, userAddress) {
   this.blockchain_status = status;
   this.last_transaction = txHash || '';
