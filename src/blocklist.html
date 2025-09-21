@@ -1,81 +1,81 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Medical-Chain</title>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Medical-Chain</title>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
-  </head>
-  <body>
-    <div class="container mb-5">
-      <nav class="navbar navbar-expand-lg bg-white sticky-top">
-        <div class="container">
-          <a class="navbar-brand text-dark fs-3 fw-bold" href="index.html">Home</a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-2">
-              <li class="nav-item">
-                <a class="nav-link text-dark fs-3 mx-3" href="tabObjects.html">Objects</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link text-secondary disabled fs-3 mx-3" href="#" tabindex="-1" aria-disabled="true">Last Transactions</a>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </nav>
-
-      <!-- <div class="row"> -->
-        <div class="col-xs-12 my-4">
-          <div id="transactionTableCleaning" class="table-responsive bg-body-secondary p-3 border border-success rounded">
-            <h4 class="text-center">Cleaned Objects</h4>
-            <table class="table table-bordered">
-              <thead>
-                <tr>
-                  <th>Object ID</th>
-                  <th>Name</th>
-                  <th>User</th>
-                  <th>Timestamp</th>
-                </tr>
-              </thead>
-              <tbody>
-                <!-- TRANSACTIONS LOADING -->
-              </tbody>
-            </table>
-          </div>
-        </div>
-        <div class="col-xs-12 my-4">
-          <div id="transactionTableUsing" class="table-responsive bg-body-secondary p-3 border border-danger rounded">
-            <h4 class="text-center">Used Objects</h4>
-            <table class="table table-bordered">
-              <thead>
-                <tr>
-                  <th>Object ID</th>
-                  <th>Name</th>
-                  <th>User</th>
-                  <th>Timestamp</th>
-                </tr>
-              </thead>
-              <tbody>
-                <!-- TRANSACTIONS LOADING -->
-              </tbody>
-            </table>
-          </div>
-        </div>
-      <!-- </div> -->
-    </div>
-
-  </body>
-  
-  <script src="js/web3.min.js"></script>
-  <script src="js/truffle-contract.js"></script>
-  <script src="js/object-api.js"></script>
-  <script src="js/transactions.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+	</head>
+	<body>
+		<div class="p-3 bg-danger-subtle">
+			<nav class="navbar navbar-expand-lg bg-white sticky-top border rounded">
+				<div class="container">
+					<a class="navbar-brand text-dark fs-3 fw-bold font-monospace" href="index.html"> 
+						<svg fill="#ff3c3c" height="35" width="35" version="1.1" id="Layer_1" class="d-inline-block align-text-top" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="-10 -10 520.00 520.00" xml:space="preserve" stroke="#ff3c3c" stroke-width="0.005"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" stroke="#000000" stroke-width="5"></g><g id="SVGRepo_iconCarrier"> <g> <g> <path d="M250,0C112.152,0,0,112.148,0,250s112.152,250,250,250c137.856,0,250-112.148,250-250S387.856,0,250,0z M390.764,278.888 c0,5.82-4.82,10.216-10.64,10.216h-87.332c-2.152,0-3.692,2.096-3.692,4.252v86.768c0,5.82-4.948,10.636-10.768,10.636h-56.804 c-5.824,0-10.632-4.82-10.632-10.636v-86.768c0.004-2.16-1.676-4.256-3.832-4.256h-87.188c-5.82,0-10.64-4.396-10.64-10.216 V221.46c0-5.824,4.82-10.564,10.64-10.564h87.184c2.16,0,3.836-1.748,3.836-3.908v-87.112c0-5.82,4.808-10.636,10.632-10.636 h56.804c5.82,0,10.768,4.82,10.768,10.636v87.116c0,2.16,1.54,3.908,3.692,3.908h87.332c5.82,0,10.64,4.74,10.64,10.564V278.888z"></path> </g> </g> </g></svg>
+						Medical-Chain 
+					</a>
+					<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+						<span class="navbar-toggler-icon"></span>
+					</button>
+					<div class="collapse navbar-collapse" id="navbarNav">
+						<ul class="navbar-nav ms-2">
+							<li class="nav-item">
+								<a class="nav-link text-dark fs-3 mx-3" href="tabObjects.html">Objects</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link text-secondary disabled fs-3 mx-3" href="#" tabindex="-1" aria-disabled="true">Last Transactions</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</nav>
+		</div>
+		<div class="container mb-5">
+			<div class="col-xs-12 my-4">
+				<div id="transactionTableCleaning" class="table-responsive bg-body-secondary p-3 border border-success rounded">
+					<h4 class="text-center">Cleaned Objects</h4>
+					<table class="table table-bordered">
+						<thead>
+							<tr>
+								<th>Object ID</th>
+								<th>Name</th>
+								<th>User</th>
+								<th>Timestamp</th>
+							</tr>
+						</thead>
+						<tbody>
+							<!-- TRANSACTIONS LOADING -->
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="col-xs-12 my-4">
+				<div id="transactionTableUsing" class="table-responsive bg-body-secondary p-3 border border-danger rounded">
+					<h4 class="text-center">Used Objects</h4>
+					<table class="table table-bordered">
+						<thead>
+							<tr>
+								<th>Object ID</th>
+								<th>Name</th>
+								<th>User</th>
+								<th>Timestamp</th>
+							</tr>
+						</thead>
+						<tbody>
+							<!-- TRANSACTIONS LOADING -->
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</body>
+	
+	<script src="js/web3.min.js"></script>
+	<script src="js/truffle-contract.js"></script>
+	<script src="js/object-api.js"></script>
+	<script src="js/transactions.js"></script>
 </html>
