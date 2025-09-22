@@ -69,13 +69,8 @@ cd medical-chain
 
 ### 2. Install Dependencies
 ```bash
-# Install backend dependencies
+# Install dependencies
 npm install
-
-# Install frontend dependencies
-npm install
-cd ..
-```
 
 ### 3. Environment Configuration
 Create a `.env` file in the root directory:
@@ -85,7 +80,7 @@ Create a `.env` file in the root directory:
 PORT=3002
 
 # Database Configuration
-MONGODB_URI=mongodb+srv://filippo:filippo@medical-chain.dq3npdk.mongodb.net/
+MONGODB_URI=mongodb+srv://user:user@medical-chain.dq3npdk.mongodb.net/
 ```
 
 ### 4. Database Setup
@@ -103,7 +98,7 @@ ganache-cli
 
 # Compile and deploy contracts
 truffle compile
-truffle migrate --network development
+truffle migrate
 ```
 
 ### 6. Start the Application
